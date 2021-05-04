@@ -19,9 +19,6 @@ import matplotlib.pyplot as plt
 
 import joblib
 
-# with open('D_7conditions.pkl', 'rb') as m:
-#     dt = joblib.load(m)
-
 def main():
     print()
     print("--------------------------------------------")
