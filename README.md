@@ -1,9 +1,9 @@
-Framework zur Erkennung von Betriebszuständen von Gabelstaplern anhand Beschleunigungsdaten der Gabelzinke 
+DoFOS (**d**etection of **f**orklift **o**perating **s**tates) is data set of acceleration data from the fork of a forklift which is used for a real-time detection of safety-relevant forklift operating states with a windowing approach.
+For more details, we refer to our paper. If you use DoFOS for your research, please consider citeing our work.
 
-@ Leo:
+Dataset
+The annotated dataset can be downloaded here.
 
-01_main_on noch falsche Zustandsnummerierung. Skript muss an sich auch überarbeitet werden. Brauch ich den Pi dazu.
-
-License oder Use oder Citationsanmerkung notwendig? 
-
-
+License
+The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law.
+You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. 
