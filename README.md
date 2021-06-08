@@ -1,4 +1,4 @@
-DoFOS (**d**etection of **f**orklift **o**perating **s**tates) is data set of acceleration data from the fork of a forklift which is used for a real-time detection of safety-relevant forklift operating states with a windowing approach.
+DoFOS (**D**etection **o**f **F**orklift **O**perating **S**tate) is a data set of acceleration data from the fork of a forklift which is used for a real-time detection of safety-relevant forklift operating states with a windowing approach.
 For more details, we refer to our paper. If you use DoFOS for your research, please consider citeing our work.
 
 Dataset
