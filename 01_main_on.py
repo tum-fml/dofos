@@ -1,4 +1,6 @@
 ################################################################################
+# Live Classification on Raspberry Pi 4b
+################################################################################
 #import RPi.GPIO as GPIO
 
 #!/usr/bin/python
@@ -76,12 +78,6 @@ def msg_send(x, zusammenfassen):
     msg44 = can.Message(arbitration_id=id44, data=[5], extended_id=False)
     can0.send(msg44)
 
-# Spielt kurzen Ton ab. Allerdings bleibt das Skript stehen bis Ton gespielt. Parallel? 
-def play():
-    duration = 0.1  # seconds
-    freq = 440  # Hz
-    os.system('play -nq -t alsa synth {} sine {}'.format(duration, freq))
-
 def clean_dataset(df):
     assert isinstance(df, pd.DataFrame), "df needs to be a pd.DataFrame"
     df.dropna(inplace=True)
@@ -156,31 +152,19 @@ if os.path.exists('/dev/ttyUSB0'):
 else:
     port = '/dev/ttyUSB1'
     
-#########################################
-#########################################
-#
-# USB 0 Unten - 1 Oben wieder ändern wenn BS und Baro nicht gleichzeitig am laufen sind!
-#
-##########################################
-##########################################
-    
-#port = '/dev/ttyUSB1'
-
-ser = serial.Serial(port=port, baudrate=115200)  # without timeout!
+ser = serial.Serial(port=port, baudrate=115200)
 
 # Filling up FIFO Arrays. Predefined at the beginning of this Code.
 def fifo_buffer():
     
-    # C++ Code sichern. GitHub nachziehen!!!!
     data = ser.readline()  # Get out raw output of ESP32-WROOM. Check C++ Code flashed on device.
-    separated = np.fromstring(data, sep=' ')  # It´s working. Why? :D (Got Bytes instead of string.)
-    # Seperated nicht notwendig. Auslesen mit UTF-8. Kein numpy notwendig. Bei Zeit ÜBERARBEITEN.
+    separated = np.fromstring(data, sep=' ') 
 
     global k
 
     if k > 1:  # ersten beiden Beschleunigungstupel beim Start des Streams ignorieren. Können fehlerhaft sein.
 
-        global x, y, z, xyz  # Need GLOBAL to get pre-allocated Array. Werte an Funktion übergeben. Jesus. ÜBERARBEITEN.
+        global x, y, z, xyz
 
         x_update = np.roll(x, -1)  # roll() function rotates Values like in a Ring-Buffer
         y_update = np.roll(y, -1)  # Update des zu betrachteten Signals 
@@ -205,15 +189,12 @@ def fifo_buffer():
             y_update[index_array] = 0
             z_update[index_array] = 1
         
-        # Fenster Update. Speichervorgang nachlesen. Speichereffizients!
         x = x_update
         y = y_update
         z = z_update
 
     k += 1
 
-# Laufzeit Klassifikation 
-#start = time.perf_counter()
 
 def main():
     # i bremst Klassifikation aus. Ohne wird bei jedem neuen Tupel klassifiziert. ~400Hz Aufnahme!
@@ -257,19 +238,9 @@ def main():
             # Classification
             zustand = clf.predict(X)
             print(zustand + ' ' + '---' + ' ' + str(datetime.datetime.now()))
-            #if zustand == 'aufschlagen/schleifen':
-            #    print(zustand + ' ' + '---' + ' ' + str(datetime.datetime.now()))
-            #    #background_thread = Thread(target=play)
-            #    #background_thread.start()
-            #    #background_thread.join()
-            #    #process = multiprocessing.Process(target=play)
-            #    #process.start()
-            #else:
-            #    print(zustand + ' ' + '---' + ' ' + str(datetime.datetime.now()))
             
             # Kontrollstruktur zwecks Signal an Steuerung.
             # Aufschleigen / Schleifen 5 mal in Folge dann Signal an Steuerung.
-            # Struktur überdenken und Feintuning!
             if zustand == "heben/senken":
                 q = 1
                 zusammenfassen -= 1
